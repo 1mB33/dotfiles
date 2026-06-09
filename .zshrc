@@ -9,6 +9,7 @@ export DOTNET_ROOT=$HOME/.dotnet
 export PATH=$HOME/.dotnet:$HOME/.dotnet/tools:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export EDITOR=nvim
+export FILE_EXPLORER=yazi
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -109,11 +110,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vim="nvim"
-alias tmuxRepo="~/Scripts/tmuxRepo.sh"
-alias spotify_tui="~/.cargo/bin/spotify_player --config-folder ~/.config/spotify-player/"
-
-
-# if [[ "$(tty)" == "/dev/tty1" && -z "$HYPRLAND_STARTED" ]]; then
-#     export HYPRLAND_STARTED=1
-#     start-hyprland
-# fi
+alias repo="~/.b33/scripts/repo.sh"
+alias spotifytui="~/.cargo/bin/spotify_player --config-folder ~/.config/spotify-player/"
+alias explore="$FILE_EXPLORER"
