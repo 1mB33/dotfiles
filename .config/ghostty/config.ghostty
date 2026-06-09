@@ -1,0 +1,14 @@
+cursor-style = block
+theme = GitHub Dark Default
+
+background-opacity = 0.84
+
+font-family = "FantasqueSansM Nerd Font Mono"
+
+window-padding-y = 20
+window-padding-x = 50
+window-colorspace = "display-p3"
+window-padding-balance = true
+window-decoration = false
+
+copy-on-select = clipboard
