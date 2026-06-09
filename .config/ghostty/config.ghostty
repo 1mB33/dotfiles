@@ -1,9 +1,10 @@
 cursor-style = block
 theme = GitHub Dark Default
 
-background-opacity = 0.84
+background-opacity = 1.
 
 font-family = "FantasqueSansM Nerd Font Mono"
+font-size = 18
 
 window-padding-y = 20
 window-padding-x = 50

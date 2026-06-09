@@ -8,8 +8,8 @@ if [ $# -ne 1 ]; then
 fi
 
 DIR_NAME="$1"
-BASE="$HOME/Repos"
-TARGET="$BASE/$DIR_NAME"
+BASE=""
+TARGET="$BASE$DIR_NAME"
 
 if [ ! -d "$TARGET" ]; then
   echo "Error: directory $TARGET does not exist: $TARGET"

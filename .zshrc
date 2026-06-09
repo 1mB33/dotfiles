@@ -113,3 +113,13 @@ alias vim="nvim"
 alias repo="~/.b33/scripts/repo.sh"
 alias spotifytui="~/.cargo/bin/spotify_player --config-folder ~/.config/spotify-player/"
 alias explore="$FILE_EXPLORER"
+
+
+function ex() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
