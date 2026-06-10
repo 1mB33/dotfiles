@@ -1,11 +1,20 @@
+# System files
+.DS_Store
+
 # Basic home structure directories
+Application Support
+Applications
+Movies
+VulkanSDK
 Desktop
 Documents
 Downloads
 Games
 Images
+Jagex
 Music
 Pictures
+Library
 Public
 Repos
 Screenshots
@@ -69,9 +78,20 @@ Templates
 *wine*
 *zsh_*
 *zcom*
+*com*
+*Xauthority
+*aspnet*
+*htaccess*
+*lldb*
+*node*
+*rnd*
+*runelite*
+*swiftpm*
+*tmp*
+*zprofile*
 
 
 # Skip and add configs manually
-.config
+*config*
 .local
 
