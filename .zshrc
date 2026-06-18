@@ -113,6 +113,7 @@ alias vim="nvim"
 alias repo="~/.b33/scripts/repo.sh"
 alias spotifytui="~/.cargo/bin/spotify_player --config-folder ~/.config/spotify-player/"
 alias explore="$FILE_EXPLORER"
+alias tkill="tmux kill-session"
 
 
 function ex() {
