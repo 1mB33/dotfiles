@@ -1,5 +1,5 @@
 function ColorMyPencils(color)
-    color = color or "tokyodark" -- "rose-pine"
+    color = color or "moonfly" -- "tokyodark" -- "rose-pine"
     vim.cmd.colorscheme(color)
 
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
@@ -30,7 +30,6 @@ return {
             ColorMyPencils()
         end
     },
-
     {
         "rose-pine/neovim",
         name = "rose-pine",
@@ -70,5 +69,7 @@ return {
 
             ColorMyPencils()
         end,
-    }
+    },
+    { 'kepano/flexoki-neovim', name = 'flexoki' },
+    { "bluz71/vim-moonfly-colors", name = "moonfly", lazy = false, priority = 1000 },
 }

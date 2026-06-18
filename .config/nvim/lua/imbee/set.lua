@@ -29,3 +29,5 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 200
 
 vim.opt.colorcolumn = "120"
+
+vim.wo.fillchars='eob: ' -- Empty char as empty line (previously '~')
