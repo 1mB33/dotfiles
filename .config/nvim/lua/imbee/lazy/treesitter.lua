@@ -41,6 +41,10 @@ return
                     vim.opt_local.foldmethod = "expr"
                     vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
                 end
+                
+                vim.schedule(function()
+                    vim.cmd("normal! zR")
+                end)
 
                 ---------------------[ treesitter indent ]-------------------------------
 
