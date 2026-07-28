@@ -1,8 +1,6 @@
 return {
     "neovim/nvim-lspconfig",
     dependencies = {
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
@@ -15,19 +13,12 @@ return {
     },
     config = function()
         local cmp = require('cmp')
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
         require("fidget").setup({})
-        require("mason").setup()
-
-        require("mason-lspconfig").setup({
-            ensure_installed = {
-                "lua_ls",
-                "clangd",
-                "rust_analyzer",
-            },
-        })
 
         vim.lsp.config.lua_ls = {
+            capabilities = capabilities,
             settings = {
                 Lua = {
                     diagnostics = {
@@ -38,12 +29,16 @@ return {
         }
 
         vim.lsp.config.clangd = {
+            capabilities = capabilities,
             root_markers = { ".clang-format", ".git", "compile_commands.json", "CMakeLists.txt" },
         }
 
-        vim.lsp.config.rust_analyzer = {}
+        vim.lsp.config.rust_analyzer = {
+            capabilities = capabilities,
+        }
 
         vim.lsp.config.hls = {
+            capabilities = capabilities,
             cmd = { "haskell-language-server-wrapper", "--lsp" },
             filetypes = { "haskell", "lhaskell" },
             root_markers = {
@@ -55,6 +50,7 @@ return {
         }
 
         vim.lsp.config.pylsp = {
+            capabilities = capabilities,
             settings = {
                 pylsp = {
                     plugins = {
@@ -67,9 +63,46 @@ return {
         }
 
         vim.lsp.config.omnisharp = {
-            capabilities = {
-                documentFormattingProvider = false,
+            capabilities = capabilities,
+        }
+
+        vim.lsp.config.ts_ls = {
+            capabilities = capabilities,
+            cmd = { "typescript-language-server", "--stdio" },
+            filetypes = {
+                "javascript",
+                "javascriptreact",
+                "typescript",
+                "typescriptreact",
             },
+            root_markers = {
+                "package.json",
+                "tsconfig.json",
+                "jsconfig.json",
+                ".git",
+            },
+        }
+
+        vim.lsp.config.html = {
+            capabilities = capabilities,
+            cmd = { "vscode-html-language-server", "--stdio" },
+            filetypes = { "html" },
+        }
+
+        vim.lsp.config.cssls = {
+            capabilities = capabilities,
+            cmd = { "vscode-css-language-server", "--stdio" },
+            filetypes = {
+                "css",
+                "scss",
+                "less",
+            },
+        }
+
+        vim.lsp.config.jsonls = {
+            capabilities = capabilities,
+            cmd = { "vscode-json-language-server", "--stdio" },
+            filetypes = { "json", "jsonc" },
         }
 
         require("conform").setup({
@@ -86,6 +119,9 @@ return {
             "pylsp",
             "pyright",
             "omnisharp",
+            "ts_ls",
+            "html",
+            "cssls",
         })
 
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
