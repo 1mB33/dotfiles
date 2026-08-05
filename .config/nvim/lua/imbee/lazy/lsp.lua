@@ -35,8 +35,15 @@ return {
 
         vim.lsp.config.rust_analyzer = {
             capabilities = capabilities,
+            cmd = { "rust-analyzer" },
+            filetypes = { "rust" },
+            root_markers = { "Cargo.toml", ".git" },
+            settings = {
+                ["rust-analyzer"] = {
+                    checkOnSave = { command = "clippy" },
+                },
+            },
         }
-
         vim.lsp.config.hls = {
             capabilities = capabilities,
             cmd = { "haskell-language-server-wrapper", "--lsp" },
@@ -167,6 +174,8 @@ return {
                 require("conform").format({ async = false })
             end
         end)
+
+
     end
 
 }
