@@ -1,5 +1,5 @@
 cursor-style = block
-theme = github-dark-high-contrast
+theme = gruvbox-dark-hard-contrast
 
 background-opacity = 0.95
 
