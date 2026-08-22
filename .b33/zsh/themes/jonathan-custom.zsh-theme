@@ -5,12 +5,20 @@
 # ── True-color escape sequences ───────────────────────────────────────────────
 # Using $'\e[...]m' literal syntax so they survive prompt_subst expansion.
 # Each PR_* is wrapped in %{...%} so zsh doesn't count the bytes as printable.
-PR_CYAN=$'%{\e[38;2;0;229;255m%}'        # #00E5FF  borders, path, corners
-PR_MAGENTA=$'%{\e[38;2;255;0;180m%}'     # #FF00B4  username, ❯ bullet
-PR_BLUE=$'%{\e[38;2;100;160;255m%}'      # #64A0FF  hostname, clock
-PR_VIOLET=$'%{\e[38;2;180;130;255m%}'    # #B482FF  git branch name
-PR_GREY=$'%{\e[38;2;160;170;200m%}'      # #A0AAC8  brackets, separators
-PR_DARK=$'%{\e[38;2;60;70;120m%}'        # #3C4678  dim fill bar
+# PR_CYAN=$'%{\e[38;2;0;229;255m%}'        # #00E5FF  borders, path, corners
+# PR_MAGENTA=$'%{\e[38;2;255;0;180m%}'     # #FF00B4  username, ❯ bullet
+# PR_BLUE=$'%{\e[38;2;100;160;255m%}'      # #64A0FF  hostname, clock
+# PR_VIOLET=$'%{\e[38;2;180;130;255m%}'    # #B482FF  git branch name
+# PR_GREY=$'%{\e[38;2;160;170;200m%}'      # #A0AAC8  brackets, separators
+# PR_DARK=$'%{\e[38;2;60;70;120m%}'        # #3C4678  dim fill bar
+# PR_NO_COLOUR=$'%{\e[0m%}'
+
+PR_CYAN=$'%{\e[38;2;142;192;124m%}'      # #8EC07C  borders, path, corners
+PR_MAGENTA=$'%{\e[38;2;254;128;25m%}'    # #FE8019  username, ❯ bullet
+PR_BLUE=$'%{\e[38;2;131;165;152m%}'      # #83A598  hostname, clock
+PR_VIOLET=$'%{\e[38;2;211;134;155m%}'    # #D3869B  git branch name
+PR_GREY=$'%{\e[38;2;146;131;116m%}'      # #928374  brackets, separators
+PR_DARK=$'%{\e[38;2;102;92;84m%}'        # #665C54  dim fill bar
 PR_NO_COLOUR=$'%{\e[0m%}'
 
 # ── Git status ────────────────────────────────────────────────────────────────

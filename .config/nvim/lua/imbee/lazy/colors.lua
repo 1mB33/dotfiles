@@ -1,5 +1,5 @@
 function ColorMyPencils(color)
-    color = color or "cyberdream" -- "teide-darker" -- "tokyodark" -- "rose-pine"
+    color = color or "monokai" -- "cyberdream" -- "teide-darker" -- "tokyodark" -- "rose-pine"
     vim.cmd.colorscheme(color)
 
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
@@ -73,6 +73,12 @@ return {
     { 'kepano/flexoki-neovim', name = 'flexoki' },
     { "bluz71/vim-moonfly-colors", name = "moonfly", lazy = false, priority = 1000 },
     { "serhez/teide.nvim", lazy = false, priority = 1000, opts = {}, },
+    {
+        "tanvirtin/monokai.nvim", lazy = false, priority = 1000,
+        config = function()
+            require('monokai').setup { palette = require('monokai').soda }
+        end,
+    },
     { 
         "scottmckendry/cyberdream.nvim",
         lazy = false, 
