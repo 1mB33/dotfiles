@@ -10,6 +10,7 @@ export PATH=$HOME/.dotnet:$HOME/.dotnet/tools:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export EDITOR=nvim
 export FILE_EXPLORER=yazi
+export CALENDAR=calcurse
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -114,6 +115,7 @@ alias repo="~/.b33/scripts/repo.sh"
 alias spotifytui="~/.cargo/bin/spotify_player --config-folder ~/.config/spotify-player/"
 alias explore="$FILE_EXPLORER"
 alias tkill="tmux kill-session"
+alias calendar="$CALENDAR"
 
 
 function ex() {
