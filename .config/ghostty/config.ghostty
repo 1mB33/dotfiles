@@ -1,0 +1,15 @@
+cursor-style = block
+theme = b33
+
+background-opacity = 0.95
+
+font-family = "FantasqueSansM Nerd Font Mono"
+font-size = 18
+
+window-padding-y = 20
+window-padding-x = 50
+window-colorspace = "display-p3"
+window-padding-balance = true
+window-decoration = false
+
+copy-on-select = clipboard
