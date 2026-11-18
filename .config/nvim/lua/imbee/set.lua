@@ -28,6 +28,14 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 200
 
-vim.opt.colorcolumn = "120"
+vim.opt.colorcolumn = "80"
 
-vim.opt.fillchars='eob: ' -- Empty char as empty line (previously '~')
+vim.opt.fillchars = "eob: " -- Empty char as empty line (previously '~')
+
+vim.opt.list = true
+
+vim.opt.listchars = {
+	tab = "··",
+	leadmultispace = "·",
+	multispace = "·",
+}

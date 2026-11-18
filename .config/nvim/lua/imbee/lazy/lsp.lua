@@ -1,187 +1,284 @@
 return {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "hrsh7th/cmp-cmdline",
-        "hrsh7th/nvim-cmp",
-        "L3MON4D3/LuaSnip",
-        "saadparwaiz1/cmp_luasnip",
-        "j-hui/fidget.nvim",
-        "stevearc/conform.nvim",
-    },
-    config = function()
-        local cmp = require('cmp')
-        local capabilities = require("cmp_nvim_lsp").default_capabilities()
+	{
+		"neovim/nvim-lspconfig",
+		event = { "BufReadPre", "BufNewFile" },
+		dependencies = {
+			"saghen/blink.cmp",
+			{ "mason-org/mason.nvim", opts = {} },
+			"mason-org/mason-lspconfig.nvim",
+			{ "j-hui/fidget.nvim", opts = {} },
+		},
+		config = function()
+			vim.lsp.config("*", {
+				capabilities = require("blink.cmp").get_lsp_capabilities(),
+			})
 
-        require("fidget").setup({})
+			local ts_hints = {
+				includeInlayParameterNameHints = "all",
+				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+				includeInlayFunctionParameterTypeHints = true,
+				includeInlayVariableTypeHints = true,
+				includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+				includeInlayPropertyDeclarationTypeHints = true,
+				includeInlayFunctionLikeReturnTypeHints = true,
+				includeInlayEnumMemberValueHints = true,
+			}
 
-        vim.lsp.config.lua_ls = {
-            capabilities = capabilities,
-            settings = {
-                Lua = {
-                    diagnostics = {
-                        globals = { "vim", "it", "describe", "before_each", "after_each" },
-                    },
-                },
-            },
-        }
+			local function lua_root(bufnr)
+				local home = vim.uv.os_homedir()
+				local name = vim.api.nvim_buf_get_name(bufnr)
+				local config = vim.fn.stdpath("config")
 
-        vim.lsp.config.clangd = {
-            capabilities = capabilities,
-            root_markers = { ".clang-format", ".git", "compile_commands.json", "CMakeLists.txt" },
-        }
+				if vim.startswith(name, config .. "/") then
+					return config
+				end
 
-        vim.lsp.config.rust_analyzer = {
-            capabilities = capabilities,
-            cmd = { "rust-analyzer" },
-            filetypes = { "rust" },
-            root_markers = { "Cargo.toml", ".git" },
-            settings = {
-                ["rust-analyzer"] = {
-                    checkOnSave = { command = "clippy" },
-                },
-            },
-        }
-        vim.lsp.config.hls = {
-            capabilities = capabilities,
-            cmd = { "haskell-language-server-wrapper", "--lsp" },
-            filetypes = { "haskell", "lhaskell" },
-            root_markers = {
-                "cabal.project",
-                "stack.yaml",
-                "package.yaml",
-                ".git",
-            },
-        }
+				local root = vim.fs.root(bufnr, {
+					".luarc.json",
+					".luarc.jsonc",
+					".stylua.toml",
+					"stylua.toml",
+					"selene.toml",
+					"selene.yml",
+					".git",
+				})
+				if root and root ~= home then
+					return root
+				end
 
-        vim.lsp.config.pylsp = {
-            capabilities = capabilities,
-            settings = {
-                pylsp = {
-                    plugins = {
-                        black = { enabled = true },
-                        autopep8 = { enabled = false },
-                        yapf = { enabled = false },
-                    },
-                },
-            },
-        }
+				local dir = vim.fs.dirname(name)
+				if dir ~= home then
+					return dir
+				end
+			end
 
-        vim.lsp.config.omnisharp = {
-            capabilities = capabilities,
-        }
+			local servers = {
 
-        vim.lsp.config.ts_ls = {
-            capabilities = capabilities,
-            cmd = { "typescript-language-server", "--stdio" },
-            filetypes = {
-                "javascript",
-                "javascriptreact",
-                "typescript",
-                "typescriptreact",
-            },
-            root_markers = {
-                "package.json",
-                "tsconfig.json",
-                "jsconfig.json",
-                ".git",
-            },
-        }
+				lua_ls = {
+					root_dir = function(bufnr, on_dir)
+						local root = lua_root(bufnr)
+						if root then
+							on_dir(root)
+						end
+					end,
+					settings = {
+						Lua = {
+							diagnostics = {
+								globals = { "vim", "it", "describe", "before_each", "after_each" },
+							},
+							hint = {
+								enable = true,
+								paramName = "All",
+								paramType = true,
+								setType = true,
+								arrayIndex = "Disable",
+								semicolon = "Disable",
+							},
+						},
+					},
+				},
 
-        vim.lsp.config.html = {
-            capabilities = capabilities,
-            cmd = { "vscode-html-language-server", "--stdio" },
-            filetypes = { "html" },
-        }
+				bashls = {},
 
-        vim.lsp.config.cssls = {
-            capabilities = capabilities,
-            cmd = { "vscode-css-language-server", "--stdio" },
-            filetypes = {
-                "css",
-                "scss",
-                "less",
-            },
-        }
+				basedpyright = {
+					settings = {
+						basedpyright = {
+							disableOrganizeImports = true,
+							analysis = {
+								typeCheckingMode = "standard",
+								inlayHints = {
+									variableTypes = true,
+									callArgumentNames = true,
+									functionReturnTypes = true,
+									genericTypes = false,
+								},
+							},
+						},
+					},
+				},
+				ruff = {},
 
-        vim.lsp.config.jsonls = {
-            capabilities = capabilities,
-            cmd = { "vscode-json-language-server", "--stdio" },
-            filetypes = { "json", "jsonc" },
-        }
+				sqls = {},
 
-        vim.lsp.config.java = {
-            capabilities = capabilities,
-            cmd = { "jdtls" },
-            filetypes = { "java" },
-        }
+				gopls = {
+					settings = {
+						gopls = {
+							hints = {
+								parameterNames = true,
+								assignVariableTypes = true,
+								rangeVariableTypes = true,
+								compositeLiteralFields = false,
+								compositeLiteralTypes = false,
+								constantValues = false,
+								functionTypeParameters = false,
+							},
+						},
+					},
+				},
 
-        require("conform").setup({
-            formatters_by_ft = {
-                cs = { "csharpier" },
-            },
-        })
+				clangd = {
+					root_markers = { ".clang-format", ".git", "compile_commands.json", "CMakeLists.txt" },
+				},
 
-        vim.lsp.enable({
-            "lua_ls",
-            "clangd",
-            "rust_analyzer",
-            "hls",
-            "pylsp",
-            "pyright",
-            "omnisharp",
-            "ts_ls",
-            "html",
-            "cssls",
-        })
+				rust_analyzer = {
+					settings = {
+						["rust-analyzer"] = {
+							check = { command = "clippy" },
+							inlayHints = {
+								parameterHints = { enable = true },
+								typeHints = { enable = true },
+								chainingHints = { enable = true },
+							},
+						},
+					},
+				},
 
-        local cmp_select = { behavior = cmp.SelectBehavior.Select }
+				hls = {},
 
-        cmp.setup({
-            snippet = {
-                expand = function(args)
-                    require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-                end,
-            },
-            mapping = cmp.mapping.preset.insert({
-                ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-                ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-                ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-                -- ['<tab>'] = cmp.mapping.confirm({ select = true }),
-                ["<C-Space>"] = cmp.mapping.complete(),
-            }),
-            sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-                { name = 'luasnip' }, -- For luasnip users.
-            }, {
-                { name = 'buffer' },
-            })
-        })
+				omnisharp = {
+					settings = {
+						RoslynExtensionsOptions = {
+							InlayHintsOptions = {
+								EnableForParameters = true,
+								ForLiteralParameters = true,
+								ForIndexerParameters = true,
+								ForObjectCreationParameters = true,
+								ForOtherParameters = true,
+								EnableForTypes = true,
+								ForImplicitVariableTypes = true,
+								ForLambdaParameterTypes = true,
+								ForImplicitObjectCreation = true,
+							},
+						},
+					},
+				},
 
-        vim.diagnostic.config({
-            -- update_in_insert = true,
-            float = {
-                focusable = false,
-                style = "minimal",
-                border = "rounded",
-                source = "always",
-                header = "",
-                prefix = "",
-            },
-        })
+				ts_ls = {
+					settings = {
+						typescript = { inlayHints = ts_hints },
+						javascript = { inlayHints = ts_hints },
+					},
+				},
 
-        vim.keymap.set("n", "<F2>", function() vim.lsp.buf.rename() end)
-        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end)
-        vim.keymap.set("n", "gr", function() vim.lsp.buf.references() end)
-        vim.keymap.set("n", "<leader>f", function()
-            if not vim.lsp.buf.format({ async = false }) then
-                require("conform").format({ async = false })
-            end
-        end)
+				html = {},
+				cssls = {},
+			}
 
+			for name, cfg in pairs(servers) do
+				vim.lsp.config(name, cfg)
+			end
+			vim.lsp.enable(vim.tbl_keys(servers))
 
-    end
+			require("mason-lspconfig").setup({
+				ensure_installed = {
+					"lua_ls",
+					"bashls",
+					"basedpyright",
+					"ruff",
+					"sqls",
+					"gopls",
+					"ts_ls",
+					"html",
+					"cssls",
+					"clangd",
+				},
+				automatic_enable = false,
+			})
 
+			vim.diagnostic.config({
+				virtual_text = true,
+				severity_sort = true,
+				float = {
+					focusable = false,
+					style = "minimal",
+					border = "rounded",
+					source = true,
+					header = "",
+					prefix = "",
+				},
+			})
+
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("user-lsp-attach", { clear = true }),
+				callback = function(ev)
+					local function map(lhs, rhs, desc)
+						vim.keymap.set("n", lhs, rhs, { buffer = ev.buf, desc = "LSP: " .. desc })
+					end
+					map("<F2>", vim.lsp.buf.rename, "Rename")
+					map("gd", vim.lsp.buf.definition, "Go to definition")
+					map("gr", vim.lsp.buf.references, "References")
+
+					local client = vim.lsp.get_client_by_id(ev.data.client_id)
+					if client and client.name == "ruff" then
+						client.server_capabilities.hoverProvider = false
+					end
+				end,
+			})
+
+			vim.lsp.inlay_hint.enable(true)
+			vim.keymap.set("n", "<leader>th", function()
+				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+			end, { desc = "Toggle inlay hints" })
+
+			local function set_hint_hl()
+				vim.api.nvim_set_hl(0, "LspInlayHint", { link = "Comment" })
+			end
+			set_hint_hl()
+			vim.api.nvim_create_autocmd("ColorScheme", { callback = set_hint_hl })
+		end,
+	},
+
+	{
+		"saghen/blink.cmp",
+		version = "1.*",
+		opts = {
+			keymap = { preset = "default" },
+			appearance = { nerd_font_variant = "mono" },
+			signature = { enabled = true },
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer" },
+				per_filetype = {
+					lua = { inherit_defaults = true, "lazydev" },
+				},
+				providers = {
+					lazydev = {
+						name = "LazyDev",
+						module = "lazydev.integrations.blink",
+						score_offset = 100,
+					},
+				},
+			},
+		},
+	},
+
+	{
+		"folke/lazydev.nvim",
+		ft = "lua",
+		opts = {
+			library = {
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			},
+		},
+	},
+
+	{
+		"stevearc/conform.nvim",
+		cmd = "ConformInfo",
+		keys = {
+			{
+				"<leader>f",
+				function()
+					require("conform").format({ async = false, lsp_format = "fallback" })
+				end,
+				desc = "Format buffer",
+			},
+		},
+		opts = {
+			formatters_by_ft = {
+				lua = { "stylua" },
+				sh = { "shfmt" },
+				cs = { "csharpier" },
+			},
+		},
+	},
 }
