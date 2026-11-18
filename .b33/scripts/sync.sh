@@ -1,24 +1,33 @@
 #!/usr/bin/bash
 
-if [[ $(pwd) = $HOME || ! -d ".git" || ! -d ".b33" ]]; then
-    echo We are not in the root directory of the repository, exiting
+if [[ ! -d ".b33"  ||
+      ! -d ".git"  || 
+      $(pwd) = $HOME ]]; then
+    echo We are not at root directory, execute the script from the root of the repository
     exit 1
 fi
 
 echo Syncing...
-files=$(ls -a)
-sync_files=
+file_list=$(find . -not -path "*git*")
+sync_list=
 
-for f in $files
+echo Gathering...
+for f in $file_list 
 do
-    if [[ $f = "." || $f = ".." ]]; then
+    if [[ $f = "." || $f = ".." || -d $f ]]; then
         continue 
     fi
-    if [[ -f "$HOME/$f" || -d "$HOME/$f" ]]; then
-        sync_files+="$f "
-    fi
+    f=${f:2}
+    sync_list+="$f "
 done
-sync_files=${sync_files::-1}
+sync_list=${sync_list::-1}
 
-echo "Syncing files from the list [$sync_files]"
+contiune_flag=
+echo "Syncing files from the list [$sync_list]"
+echo
+read -p "Continue? [Y/n] " continue_flag
+if [[ $contiune_flag = "y" || $contiune_flag = "Y" ]]; then
+    rm -r $sync_list
+    cp -r $(printf "$HOME/%s" $sync_list) .
+fi
 echo Synced
